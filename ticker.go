@@ -3,13 +3,21 @@ package onedayticker
 import "time"
 
 type OneDayTicker struct {
-	stop chan struct{}
+	stop                 chan struct{}
+	baseTickerCheckEvery time.Duration
 }
 
 func NewOneDayTicker() *OneDayTicker {
 	return &OneDayTicker{
-		stop: make(chan struct{}, 0),
+		stop:                 make(chan struct{}, 0),
+		baseTickerCheckEvery: time.Second * 3,
 	}
+}
+
+func (t *OneDayTicker) WithCheckEvery(d time.Duration) *OneDayTicker {
+	t.baseTickerCheckEvery = d
+
+	return t
 }
 
 func (t *OneDayTicker) Stop() {
@@ -17,7 +25,7 @@ func (t *OneDayTicker) Stop() {
 }
 
 func (t *OneDayTicker) Ticker(tickHours, tickMinutes int, excludeDays []time.Weekday) <-chan time.Time {
-	ticker := time.NewTicker(time.Second * 3)
+	ticker := time.NewTicker(t.baseTickerCheckEvery)
 
 	outTicker := make(chan time.Time)
 

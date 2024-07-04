@@ -1,3 +1,3 @@
 module github.com/andyollylarkin/one_day_ticker
 
-go 1.22.4
+go 1.21.4
